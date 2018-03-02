@@ -17,8 +17,7 @@ namespace Playtika.NETSummit.Tests.Problem1
         public void SetUp()
         {
             Mocker = new AutoMocker();
-            // Remove Returns()
-            Mocker.GetMock<IUiFactory>().Setup(x => x.Create<IView>()).Returns(Mocker.Get<IView>());
+            Mocker.GetMock<IUiFactory>().Setup(x => x.Create<IView>());
         }
 
         [Test]
@@ -28,8 +27,7 @@ namespace Playtika.NETSummit.Tests.Problem1
 
             controller.Initialize();
 
-            // Times.Exactly(2)
-            Mocker.GetMock<IUiFactory>().Verify(x => x.Create<IView>(), Times.Once);
+            Mocker.GetMock<IUiFactory>().Verify(x => x.Create<IView>(), Times.Exactly(2));
         }
 
         [Test]
@@ -49,10 +47,10 @@ namespace Playtika.NETSummit.Tests.Problem1
         {
             Mocker.GetMock<IApi>()
                 .Setup(x => x.GetTemperature())
-                .Returns(() =>
+                .Returns(async () =>
                 {
-                    //Add await Task.Delay(10)
-                    return Task.FromResult(1);
+                    await Task.Delay(10);
+                    return 1;
                 });
             var controller = Mocker.CreateInstance<Controller>();
             controller.Initialize();
